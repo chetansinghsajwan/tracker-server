@@ -18,7 +18,7 @@ type Account struct {
 
 
 
-type AccountRepository interface {
+type AccountRepo interface {
 	Create(ctx context.Context, account *Account) error
 	GetByID(ctx context.Context, id int64) (*Account, error)
 	ListByUserID(ctx context.Context, userID string) ([]*Account, error)

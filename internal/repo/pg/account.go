@@ -6,21 +6,21 @@ import (
 	"tracker-server/internal/repo"
 )
 
-type postgresAccountRepository struct {
+type postgresAccountRepo struct {
 	db *sql.DB
 }
 
-func NewPostgresAccountRepository(db *sql.DB) repo.AccountRepository {
-	return &postgresAccountRepository{db: db}
+func NewPostgresAccountRepo(db *sql.DB) repo.AccountRepo {
+	return &postgresAccountRepo{db: db}
 }
 
-func (r *postgresAccountRepository) Create(ctx context.Context, account *repo.Account) error {
+func (r *postgresAccountRepo) Create(ctx context.Context, account *repo.Account) error {
 	query := `INSERT INTO accounts (user_id, name, type, currency, created_at)
 			  VALUES ($1, $2, $3, $4, $5) RETURNING id`
 	return r.db.QueryRowContext(ctx, query, account.UserID, account.Name, account.Type, account.Currency, account.CreatedAt).Scan(&account.ID)
 }
 
-func (r *postgresAccountRepository) GetByID(ctx context.Context, id int64) (*repo.Account, error) {
+func (r *postgresAccountRepo) GetByID(ctx context.Context, id int64) (*repo.Account, error) {
 	query := `SELECT id, user_id, name, type, currency, created_at FROM accounts WHERE id = $1`
 	row := r.db.QueryRowContext(ctx, query, id)
 
@@ -32,7 +32,7 @@ func (r *postgresAccountRepository) GetByID(ctx context.Context, id int64) (*rep
 	return &account, nil
 }
 
-func (r *postgresAccountRepository) ListByUserID(ctx context.Context, userID string) ([]*repo.Account, error) {
+func (r *postgresAccountRepo) ListByUserID(ctx context.Context, userID string) ([]*repo.Account, error) {
 	query := `SELECT id, user_id, name, type, currency, created_at FROM accounts WHERE user_id = $1`
 	rows, err := r.db.QueryContext(ctx, query, userID)
 	if err != nil {
@@ -51,13 +51,13 @@ func (r *postgresAccountRepository) ListByUserID(ctx context.Context, userID str
 	return accounts, nil
 }
 
-func (r *postgresAccountRepository) Update(ctx context.Context, account *repo.Account) error {
+func (r *postgresAccountRepo) Update(ctx context.Context, account *repo.Account) error {
 	query := `UPDATE accounts SET name = $1, type = $2, currency = $3 WHERE id = $4`
 	_, err := r.db.ExecContext(ctx, query, account.Name, account.Type, account.Currency, account.ID)
 	return err
 }
 
-func (r *postgresAccountRepository) Delete(ctx context.Context, id int64) error {
+func (r *postgresAccountRepo) Delete(ctx context.Context, id int64) error {
 	query := `DELETE FROM accounts WHERE id = $1`
 	_, err := r.db.ExecContext(ctx, query, id)
 	return err

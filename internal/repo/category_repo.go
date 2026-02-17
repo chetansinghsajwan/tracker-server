@@ -17,7 +17,7 @@ type Category struct {
 
 
 
-type CategoryRepository interface {
+type CategoryRepo interface {
 	Create(ctx context.Context, category *Category) error
 	GetByID(ctx context.Context, id int64) (*Category, error)
 	ListByUserID(ctx context.Context, userID string) ([]*Category, error)

@@ -34,7 +34,7 @@ type TransactionFilter struct {
 
 
 
-type TransactionRepository interface {
+type TransactionRepo interface {
 	Create(ctx context.Context, transaction *Transaction) error
 	GetByID(ctx context.Context, id int64) (*Transaction, error)
 	ListByUserID(ctx context.Context, userID string, filter TransactionFilter) ([]*Transaction, error)

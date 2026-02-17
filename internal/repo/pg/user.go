@@ -6,15 +6,15 @@ import (
 	"tracker-server/internal/repo"
 )
 
-type postgresUserRepository struct {
+type postgresUserRepo struct {
 	db *sql.DB
 }
 
-func NewPostgresUserRepository(db *sql.DB) repo.UserRepository {
-	return &postgresUserRepository{db: db}
+func NewPostgresUserRepo(db *sql.DB) repo.UserRepo {
+	return &postgresUserRepo{db: db}
 }
 
-func (r *postgresUserRepository) Create(ctx context.Context, user *repo.User, secret *repo.UserSecret) error {
+func (r *postgresUserRepo) Create(ctx context.Context, user *repo.User, secret *repo.UserSecret) error {
 	tx, err := r.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -38,7 +38,7 @@ func (r *postgresUserRepository) Create(ctx context.Context, user *repo.User, se
 	return tx.Commit()
 }
 
-func (r *postgresUserRepository) GetByID(ctx context.Context, id string) (*repo.User, error) {
+func (r *postgresUserRepo) GetByID(ctx context.Context, id string) (*repo.User, error) {
 	query := `SELECT id, email, full_name, display_name, created_at FROM users WHERE id = $1`
 	row := r.db.QueryRowContext(ctx, query, id)
 

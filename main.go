@@ -30,11 +30,11 @@ func main() {
 	fmt.Println("Connected to database")
 
 	// Initialize Repositories
-	userRepo := pg.NewPostgresUserRepository(db)
-	accountRepo := pg.NewPostgresAccountRepository(db)
-	categoryRepo := pg.NewPostgresCategoryRepository(db)
-	tagRepo := pg.NewPostgresTagRepository(db)
-	transactionRepo := pg.NewPostgresTransactionRepository(db)
+	userRepo := pg.NewPostgresUserRepo(db)
+	accountRepo := pg.NewPostgresAccountRepo(db)
+	categoryRepo := pg.NewPostgresCategoryRepo(db)
+	tagRepo := pg.NewPostgresTagRepo(db)
+	transactionRepo := pg.NewPostgresTransactionRepo(db)
 
 	// Prevent unused variable errors
 	fmt.Printf("Initialized repositories: User(%v), Account(%v), Category(%v), Tag(%v), Transaction(%v)\n",

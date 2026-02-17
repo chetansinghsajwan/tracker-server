@@ -22,7 +22,7 @@ type UserSecret struct {
 
 
 
-type UserRepository interface {
+type UserRepo interface {
 	Create(ctx context.Context, user *User, secret *UserSecret) error
 	GetByID(ctx context.Context, id string) (*User, error)
 

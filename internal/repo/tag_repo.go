@@ -16,7 +16,7 @@ type Tag struct {
 
 
 
-type TagRepository interface {
+type TagRepo interface {
 	Create(ctx context.Context, tag *Tag) error
 	GetByID(ctx context.Context, id int64) (*Tag, error)
 	ListByUserID(ctx context.Context, userID string) ([]*Tag, error)
