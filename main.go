@@ -9,6 +9,7 @@ import (
 
 	_ "github.com/lib/pq"
 
+	"tracker-server/internal/controller"
 	"tracker-server/internal/repo/pg"
 	"tracker-server/internal/service"
 )
@@ -44,12 +45,73 @@ func main() {
 	tagService := service.NewTagService(tagRepo)
 	transactionService := service.NewTransactionService(transactionRepo)
 
-	// Prevent unused variable errors
-	fmt.Printf("Initialized services: User(%v), Account(%v), Category(%v), Tag(%v), Transaction(%v)\n",
-		userService != nil, accountService != nil, categoryService != nil, tagService != nil, transactionService != nil)
+	// Initialize Controllers
+	userController := controller.NewUserController(userService)
+	accountController := controller.NewAccountController(accountService)
+	categoryController := controller.NewCategoryController(categoryService)
+	tagController := controller.NewTagController(tagService)
+	transactionController := controller.NewTransactionController(transactionService)
+
+	// Routes
+	http.HandleFunc("/users", userController.Register)
+	http.HandleFunc("/users/", userController.GetUser)
+
+	http.HandleFunc("/accounts", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			accountController.Create(w, r)
+		case http.MethodGet:
+			// Decide between List and Get based on path?
+			// accountController.ListAndGet handles /accounts and /accounts/{id} logic
+			// But ListAndGet assumes it's mounted at /accounts/??
+			// Let's use ListAndGet for both for now, as it checks path length
+			accountController.ListAndGet(w, r)
+		default:
+			accountController.ListAndGet(w, r) // Let it handle other methods
+		}
+	})
+	// Handle /accounts/ specifically to ensure it goes to ListAndGet
+	http.HandleFunc("/accounts/", accountController.ListAndGet)
+
+	http.HandleFunc("/categories", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			categoryController.Create(w, r)
+		case http.MethodGet:
+			categoryController.List(w, r)
+		default:
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
+
+	http.HandleFunc("/tags", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			tagController.Create(w, r)
+		case http.MethodGet:
+			tagController.List(w, r)
+		default:
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
+
+	http.HandleFunc("/transactions", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			transactionController.Create(w, r)
+		case http.MethodGet:
+			transactionController.List(w, r)
+		default:
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello, World!")
+		if r.URL.Path == "/" {
+			fmt.Fprintf(w, "Tracker Server API")
+		} else {
+			http.NotFound(w, r)
+		}
 	})
 
 	port := os.Getenv("PORT")
