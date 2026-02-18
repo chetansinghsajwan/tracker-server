@@ -10,6 +10,7 @@ import (
 	_ "github.com/lib/pq"
 
 	"tracker-server/internal/repo/pg"
+	"tracker-server/internal/service"
 )
 
 func main() {
@@ -36,9 +37,16 @@ func main() {
 	tagRepo := pg.NewPostgresTagRepo(db)
 	transactionRepo := pg.NewPostgresTransactionRepo(db)
 
+	// Initialize Services
+	userService := service.NewUserService(userRepo)
+	accountService := service.NewAccountService(accountRepo)
+	categoryService := service.NewCategoryService(categoryRepo)
+	tagService := service.NewTagService(tagRepo)
+	transactionService := service.NewTransactionService(transactionRepo)
+
 	// Prevent unused variable errors
-	fmt.Printf("Initialized repositories: User(%v), Account(%v), Category(%v), Tag(%v), Transaction(%v)\n",
-		userRepo != nil, accountRepo != nil, categoryRepo != nil, tagRepo != nil, transactionRepo != nil)
+	fmt.Printf("Initialized services: User(%v), Account(%v), Category(%v), Tag(%v), Transaction(%v)\n",
+		userService != nil, accountService != nil, categoryService != nil, tagService != nil, transactionService != nil)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello, World!")
