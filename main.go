@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 
 	"tracker-server/internal/controller"
@@ -15,9 +16,14 @@ import (
 )
 
 func main() {
+	// Load .env file if it exists
+	if err := godotenv.Load(); err != nil {
+		fmt.Println("No .env file found")
+	}
+
 	connStr := os.Getenv("DATABASE_URL")
 	if connStr == "" {
-		connStr = "postgres://user:password@localhost:5432/money_tracker?sslmode=disable"
+		log.Fatal("DATABASE_URL environment variable is not set")
 	}
 
 	db, err := sql.Open("postgres", connStr)
