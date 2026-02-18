@@ -14,28 +14,28 @@ BEGIN
 
     CREATE DOMAIN user_id_type AS VARCHAR(30)
     CHECK (
-        attribute IS NOT NULL
+        VALUE IS NOT NULL
         -- ensure no empty whitespace value
-        AND length(trim(attribute)) != 0
+        AND length(trim(VALUE)) != 0
         -- ensure lowercase alphanumeric and hyphen only and between 2 to 30 in length
-        AND attribute ~ '^[a-z0-9][a-z0-9-]{0,28}[a-z0-9]$'
+        AND VALUE ~ '^[a-z0-9][a-z0-9-]{0,28}[a-z0-9]$'
         -- ensure no multiple hyphens together
-        AND attribute !~ '--+'
+        AND VALUE !~ '--+'
     );
     COMMENT ON DOMAIN user_id_type IS 'Valid user ID format: lowercase, alphanumeric, hyphens, 2-30 chars, no double hyphens';
 
     CREATE DOMAIN currency_code AS CHAR(3)
     CHECK (
-        attribute IS NOT NULL
-        AND length(attribute) = 3
-        AND attribute = upper(attribute)
+        VALUE IS NOT NULL
+        AND length(VALUE) = 3
+        AND VALUE = upper(VALUE)
     );
     COMMENT ON DOMAIN currency_code IS 'ISO 4217 Currency Code (3 chars, uppercase)';
 
     CREATE DOMAIN transaction_type AS VARCHAR(20)
     CHECK (
-        attribute IS NOT NULL
-        AND attribute IN ('income', 'expense', 'transfer')
+        VALUE IS NOT NULL
+        AND VALUE IN ('income', 'expense', 'transfer')
     );
     COMMENT ON DOMAIN transaction_type IS 'Type of transaction: income, expense, or transfer';
 
@@ -174,8 +174,7 @@ BEGIN
         tag_id INTEGER NOT NULL REFERENCES tags(id) ON DELETE CASCADE,
         PRIMARY KEY (transaction_id, tag_id)
     );
-
-    CREATE INDEX idx_transactions_user ON transactions(user_id);
+CREATE INDEX idx_transactions_user ON transactions(user_id);
     CREATE INDEX idx_transactions_from_account ON transactions(from_account_id);
     CREATE INDEX idx_transactions_to_account ON transactions(to_account_id);
     CREATE INDEX idx_transactions_date ON transactions(transaction_date);
