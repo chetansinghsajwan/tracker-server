@@ -20,10 +20,11 @@ func (s *UserRepoSuite) TestAll(t *testing.T) {
 func (s *UserRepoSuite) TestCreate(t *testing.T) {
 	ctx := context.Background()
 	user := &repo.User{
-		ID:        "user-1",
-		Email:     "test@example.com",
-		FullName:  "Test User",
-		CreatedAt: time.Now(),
+		ID:          "user-1",
+		Email:       "test@example.com",
+		FullName:    "Test User",
+		DisplayName: "Test User",
+		CreatedAt:   time.Now(),
 	}
 	secret := &repo.UserSecret{
 		ID:    "user-1",
@@ -54,10 +55,11 @@ func (s *UserRepoSuite) TestGetByID(t *testing.T) {
 
 	id := "user-2"
 	user := &repo.User{
-		ID:        id,
-		Email:     "get@example.com",
-		FullName:  "Get User",
-		CreatedAt: time.Now(),
+		ID:          id,
+		Email:       "get@example.com",
+		FullName:    "Get User",
+		DisplayName: "Get User",
+		CreatedAt:   time.Now(),
 	}
 	secret := &repo.UserSecret{
 		ID:    id,

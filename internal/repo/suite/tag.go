@@ -22,7 +22,7 @@ func (s *TagRepoSuite) TestAll(t *testing.T) {
 func (s *TagRepoSuite) TestCreate(t *testing.T) {
 	ctx := context.Background()
 	userID := "tag-user-1"
-	s.UserRepo.Create(ctx, &repo.User{ID: userID, Email: "tag1@ex.com", FullName: "Tag User", CreatedAt: time.Now()}, &repo.UserSecret{ID: userID, Value: "s"})
+	s.UserRepo.Create(ctx, &repo.User{ID: userID, Email: "tag1@ex.com", FullName: "Tag User", DisplayName: "Tag User", CreatedAt: time.Now()}, &repo.UserSecret{ID: userID, Value: "s"})
 
 	tag := &repo.Tag{
 		UserID:    userID,
@@ -41,7 +41,7 @@ func (s *TagRepoSuite) TestCreate(t *testing.T) {
 func (s *TagRepoSuite) TestGetByID(t *testing.T) {
 	ctx := context.Background()
 	userID := "tag-user-2"
-	s.UserRepo.Create(ctx, &repo.User{ID: userID, Email: "tag2@ex.com", FullName: "Tag User", CreatedAt: time.Now()}, &repo.UserSecret{ID: userID, Value: "s"})
+	s.UserRepo.Create(ctx, &repo.User{ID: userID, Email: "tag2@ex.com", FullName: "Tag User", DisplayName: "Tag User", CreatedAt: time.Now()}, &repo.UserSecret{ID: userID, Value: "s"})
 
 	tag := &repo.Tag{UserID: userID, Name: "later", CreatedAt: time.Now()}
 	s.Repo.Create(ctx, tag)
@@ -58,7 +58,7 @@ func (s *TagRepoSuite) TestGetByID(t *testing.T) {
 func (s *TagRepoSuite) TestListByUserID(t *testing.T) {
 	ctx := context.Background()
 	userID := "tag-user-3"
-	s.UserRepo.Create(ctx, &repo.User{ID: userID, Email: "tag3@ex.com", FullName: "Tag User", CreatedAt: time.Now()}, &repo.UserSecret{ID: userID, Value: "s"})
+	s.UserRepo.Create(ctx, &repo.User{ID: userID, Email: "tag3@ex.com", FullName: "Tag User", DisplayName: "Tag User", CreatedAt: time.Now()}, &repo.UserSecret{ID: userID, Value: "s"})
 
 	s.Repo.Create(ctx, &repo.Tag{UserID: userID, Name: "T1", CreatedAt: time.Now()})
 	s.Repo.Create(ctx, &repo.Tag{UserID: userID, Name: "T2", CreatedAt: time.Now()})

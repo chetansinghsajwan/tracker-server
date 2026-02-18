@@ -22,7 +22,7 @@ func (s *CategoryRepoSuite) TestAll(t *testing.T) {
 func (s *CategoryRepoSuite) TestCreate(t *testing.T) {
 	ctx := context.Background()
 	userID := "cat-user-1"
-	s.UserRepo.Create(ctx, &repo.User{ID: userID, Email: "cat1@ex.com", FullName: "Cat User", CreatedAt: time.Now()}, &repo.UserSecret{ID: userID, Value: "s"})
+	s.UserRepo.Create(ctx, &repo.User{ID: userID, Email: "cat1@ex.com", FullName: "Cat User", DisplayName: "Cat User", CreatedAt: time.Now()}, &repo.UserSecret{ID: userID, Value: "s"})
 
 	category := &repo.Category{
 		UserID:    userID,
@@ -42,7 +42,7 @@ func (s *CategoryRepoSuite) TestCreate(t *testing.T) {
 func (s *CategoryRepoSuite) TestGetByID(t *testing.T) {
 	ctx := context.Background()
 	userID := "cat-user-2"
-	s.UserRepo.Create(ctx, &repo.User{ID: userID, Email: "cat2@ex.com", FullName: "Cat User", CreatedAt: time.Now()}, &repo.UserSecret{ID: userID, Value: "s"})
+	s.UserRepo.Create(ctx, &repo.User{ID: userID, Email: "cat2@ex.com", FullName: "Cat User", DisplayName: "Cat User", CreatedAt: time.Now()}, &repo.UserSecret{ID: userID, Value: "s"})
 
 	cat := &repo.Category{UserID: userID, Name: "Rent", Type: "expense", CreatedAt: time.Now()}
 	s.Repo.Create(ctx, cat)
@@ -59,7 +59,7 @@ func (s *CategoryRepoSuite) TestGetByID(t *testing.T) {
 func (s *CategoryRepoSuite) TestListByUserID(t *testing.T) {
 	ctx := context.Background()
 	userID := "cat-user-3"
-	s.UserRepo.Create(ctx, &repo.User{ID: userID, Email: "cat3@ex.com", FullName: "Cat User", CreatedAt: time.Now()}, &repo.UserSecret{ID: userID, Value: "s"})
+	s.UserRepo.Create(ctx, &repo.User{ID: userID, Email: "cat3@ex.com", FullName: "Cat User", DisplayName: "Cat User", CreatedAt: time.Now()}, &repo.UserSecret{ID: userID, Value: "s"})
 
 	s.Repo.Create(ctx, &repo.Category{UserID: userID, Name: "C1", Type: "expense", CreatedAt: time.Now()})
 	s.Repo.Create(ctx, &repo.Category{UserID: userID, Name: "C2", Type: "income", CreatedAt: time.Now()})

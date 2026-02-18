@@ -24,7 +24,7 @@ func (s *TransactionRepoSuite) TestAll(t *testing.T) {
 func (s *TransactionRepoSuite) TestCreate(t *testing.T) {
 	ctx := context.Background()
 	userID := "tx-user-1"
-	s.UserRepo.Create(ctx, &repo.User{ID: userID, Email: "tx1@ex.com", FullName: "Tx User", CreatedAt: time.Now()}, &repo.UserSecret{ID: userID, Value: "s"})
+	s.UserRepo.Create(ctx, &repo.User{ID: userID, Email: "tx1@ex.com", FullName: "Tx User", DisplayName: "Tx User", CreatedAt: time.Now()}, &repo.UserSecret{ID: userID, Value: "s"})
 
 	acc1 := &repo.Account{UserID: userID, Name: "A1", Type: "cash", Currency: "USD", CreatedAt: time.Now()}
 	s.AccountRepo.Create(ctx, acc1)
@@ -53,7 +53,7 @@ func (s *TransactionRepoSuite) TestCreate(t *testing.T) {
 func (s *TransactionRepoSuite) TestGetByID(t *testing.T) {
 	ctx := context.Background()
 	userID := "tx-user-2"
-	s.UserRepo.Create(ctx, &repo.User{ID: userID, Email: "tx2@ex.com", FullName: "Tx User", CreatedAt: time.Now()}, &repo.UserSecret{ID: userID, Value: "s"})
+	s.UserRepo.Create(ctx, &repo.User{ID: userID, Email: "tx2@ex.com", FullName: "Tx User", DisplayName: "Tx User", CreatedAt: time.Now()}, &repo.UserSecret{ID: userID, Value: "s"})
 
 	acc1 := &repo.Account{UserID: userID, Name: "A1", Type: "cash", Currency: "USD", CreatedAt: time.Now()}
 	s.AccountRepo.Create(ctx, acc1)
@@ -81,12 +81,16 @@ func (s *TransactionRepoSuite) TestGetByID(t *testing.T) {
 func (s *TransactionRepoSuite) TestListByUserID(t *testing.T) {
 	ctx := context.Background()
 	userID := "tx-user-3"
-	s.UserRepo.Create(ctx, &repo.User{ID: userID, Email: "tx3@ex.com", FullName: "Tx User", CreatedAt: time.Now()}, &repo.UserSecret{ID: userID, Value: "s"})
+	s.UserRepo.Create(ctx, &repo.User{ID: userID, Email: "tx3@ex.com", FullName: "Tx User", DisplayName: "Tx User", CreatedAt: time.Now()}, &repo.UserSecret{ID: userID, Value: "s"})
 	acc1 := &repo.Account{UserID: userID, Name: "A1", Type: "cash", Currency: "USD", CreatedAt: time.Now()}
 	s.AccountRepo.Create(ctx, acc1)
 
-	s.Repo.Create(ctx, &repo.Transaction{UserID: userID, FromAccountID: &acc1.ID, Amount: 10, Type: "expense", TransactionDate: time.Now(), CreatedAt: time.Now()})
-	s.Repo.Create(ctx, &repo.Transaction{UserID: userID, FromAccountID: &acc1.ID, Amount: 20, Type: "expense", TransactionDate: time.Now(), CreatedAt: time.Now()})
+	if err := s.Repo.Create(ctx, &repo.Transaction{UserID: userID, FromAccountID: &acc1.ID, Amount: 10, Type: "expense", Description: "Test Tx 1", TransactionDate: time.Now(), CreatedAt: time.Now()}); err != nil {
+		t.Fatalf("Create tx 1 failed: %v", err)
+	}
+	if err := s.Repo.Create(ctx, &repo.Transaction{UserID: userID, FromAccountID: &acc1.ID, Amount: 20, Type: "expense", Description: "Test Tx 2", TransactionDate: time.Now(), CreatedAt: time.Now()}); err != nil {
+		t.Fatalf("Create tx 2 failed: %v", err)
+	}
 
 	txs, err := s.Repo.ListByUserID(ctx, userID, repo.TransactionFilter{})
 	if err != nil {

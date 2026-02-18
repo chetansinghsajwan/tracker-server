@@ -24,7 +24,7 @@ func (s *AccountRepoSuite) TestCreate(t *testing.T) {
 	userID := "acc-user-1"
 
 	// Setup user
-	user := &repo.User{ID: userID, Email: "acc1@ex.com", FullName: "Acc User", CreatedAt: time.Now()}
+	user := &repo.User{ID: userID, Email: "acc1@ex.com", FullName: "Acc User", DisplayName: "Acc User", CreatedAt: time.Now()}
 	s.UserRepo.Create(ctx, user, &repo.UserSecret{ID: userID, Value: "s"})
 
 	account := &repo.Account{
@@ -46,7 +46,7 @@ func (s *AccountRepoSuite) TestCreate(t *testing.T) {
 func (s *AccountRepoSuite) TestGetByID(t *testing.T) {
 	ctx := context.Background()
 	userID := "acc-user-2"
-	user := &repo.User{ID: userID, Email: "acc2@ex.com", FullName: "Acc User", CreatedAt: time.Now()}
+	user := &repo.User{ID: userID, Email: "acc2@ex.com", FullName: "Acc User", DisplayName: "Acc User", CreatedAt: time.Now()}
 	s.UserRepo.Create(ctx, user, &repo.UserSecret{ID: userID, Value: "s"})
 
 	account := &repo.Account{UserID: userID, Name: "Get Account", Type: "cash", Currency: "USD", CreatedAt: time.Now()}
@@ -64,7 +64,7 @@ func (s *AccountRepoSuite) TestGetByID(t *testing.T) {
 func (s *AccountRepoSuite) TestListByUserID(t *testing.T) {
 	ctx := context.Background()
 	userID := "acc-user-3"
-	user := &repo.User{ID: userID, Email: "acc3@ex.com", FullName: "Acc User", CreatedAt: time.Now()}
+	user := &repo.User{ID: userID, Email: "acc3@ex.com", FullName: "Acc User", DisplayName: "Acc User", CreatedAt: time.Now()}
 	s.UserRepo.Create(ctx, user, &repo.UserSecret{ID: userID, Value: "s"})
 
 	s.Repo.Create(ctx, &repo.Account{UserID: userID, Name: "A1", Type: "bank", Currency: "USD", CreatedAt: time.Now()})
